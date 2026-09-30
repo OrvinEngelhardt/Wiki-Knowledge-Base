@@ -1,0 +1,3 @@
+projekt-oe.de {
+    reverse_proxy docmost:3000
+}

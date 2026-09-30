@@ -1,12 +1,25 @@
 services:
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - docmost
+    restart: unless-stopped
+
   docmost:
     image: docmost/docmost:latest
     depends_on:
       - db
       - redis
     environment:
-      APP_URL: 'https://docmost.example.com'
-      APP_SECRET: '815997ace4b64508baecb9d0ca7d3ba0aac9884157e2d4c0a03083f8813b1835'
+      APP_URL: 'https://projekt-oe.de'
+      APP_SECRET: 'ed8a756cc0646b807947344c5b8fa8f78552f0a722677f092e5aec59d631c0e3'
       DATABASE_URL: 'postgresql://docmost:admin@db:5432/docmost'
       REDIS_URL: 'redis://redis:6379'
     ports:
@@ -32,7 +45,26 @@ services:
     volumes:
       - redis_data:/data
 
+  checkmk:
+    image: "checkmk/check-mk-community:2.5.0-latest"
+    container_name: "monitoring"
+    environment:
+      - CMK_PASSWORD=admin
+      - TZ=Europe/Berlin
+    volumes:
+      - monitoring:/omd/sites
+    tmpfs:
+      - /opt/omd/sites/cmk/tmp:uid=1000,gid=1000
+    ports:
+      - 8080:5000
+      - 8000:8000
+    restart: always
+
+
 volumes:
   docmost:
   db_data:
   redis_data:
+  caddy_data:
+  caddy_config:
+  monitoring:
