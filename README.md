@@ -41,22 +41,6 @@ Zusätzlich finde ich das Simple Design und andere Theatures wie das Arbeiten in
 ## Sollen einzelne Dienste virtualisiert werden? Falls ja, mit welchen Technologien?
 Ja Projekt wird durch Docker/Podman virtualisiert.
 
-## Überlegen Sie für jeden Dienst, mit welcher Software er betrieben werden soll. Vergleichen Sie dafür alternative Softwarelösungen anhand geeigneter Kriterien.
-
-## Welche Recovery Time Objective (RTO) wollen Sie erreichen?
-- Offen
-
-## Welche Systemeigenschaften sollen vom Monitoring überwacht werden?
-- Offen
-
-## Habt Sie bereits Gedanken, wie eine spätere Automatisierung umgesetzt werden kann?
-- Über Dockerfile
-
-## Erstellen Sie einen groben Zeitplan für die Umsetzung des Projektes.
-- Offen
-
-## Wer aus dem Team wird welche Aufgaben übernehmen?
-- Offen
 
 ## Welche Anleitungen (bzw. Tutorials) soll genutzt werden? Welche sonstige Dokumentation könnte nützlich sein?
 - https://docmost.com/docs/
