@@ -27,7 +27,7 @@ Zusätzlich finde ich das Simple Design und andere Theatures wie das Arbeiten in
 
 ## Welche Dienste sollen als Teil des Projektes integriert werden?
 - Backup = restic (https://restic.net/)
-- Monitoring = CheckMK (https://checkmk.com/de)
+- Monitoring = CheckMK (https://checkmk.com/de) (https://docs.checkmk.com/latest/de/introduction_docker.html)
 - AI provider = Offen
 - Deployment Automatiesierung = Dockerfile
 - Revers Proxi = Caddy oder Treafik
