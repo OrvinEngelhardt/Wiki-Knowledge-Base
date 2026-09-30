@@ -26,8 +26,8 @@ Ich habe mich für Docmoste entschieden weil es Kostenlos und Onpremis ist. Das 
 Zusätzlich finde ich das Simple Design und andere Theatures wie das Arbeiten in MarkDown cool. Auch die Implementiereung eines Selfhosted AI-Search-Assistenten finde ich interessant. Die Implementierung über einen Docker Container wirk ersteinmal simpel und der Empfohlene Revers Proxi ist auch etwas womit ich gerne Rumspielen will.
 
 ## Welche Dienste sollen als Teil des Projektes integriert werden?
-- Backup = Offen 
-- Monitoring = Offen
+- Backup = restic
+- Monitoring = CheckMK
 - AI provider = Offen
 - Deployment Automatiesierung = Dockerfile
 - Revers Proxi = Caddy oder Treafik
