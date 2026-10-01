@@ -48,5 +48,8 @@ Ja Projekt wird durch Docker/Podman virtualisiert.
 
 ## Deployment
 yml
+CheckMk
 wget https://download.checkmk.com/checkmk/2.5.0p14/check-mk-community-2.5.0p14_0.trixie_amd64.deb
 sudo apt install ./check-mk-community-2.5.0p14_0.trixie_amd64.deb
+sudo omd create monitoring
+sudo omd start monitoring
