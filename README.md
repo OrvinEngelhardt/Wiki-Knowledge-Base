@@ -47,9 +47,15 @@ Ja Projekt wird durch Docker/Podman virtualisiert.
 - https://podman.io/docs
 
 ## Deployment
-yml
-CheckMk
+Dockmost:
+.yml
+Docker compose up -d
+CheckMk:
 wget https://download.checkmk.com/checkmk/2.5.0p14/check-mk-community-2.5.0p14_0.trixie_amd64.deb
 sudo apt install ./check-mk-community-2.5.0p14_0.trixie_amd64.deb
-sudo omd create monitoring
-sudo omd start monitoring
+sudo omd create --admin-password 'PASSWORT' monitoring  #User cmkadmin
+sudo omd config monitoring set APACHE_TCP_ADDR 0.0.0.0
+sudo omd start monitoring #http://127.0.0.1:5000/monitoring
+sudo apt install python3-dockersudo cp /omd/sites/monitoring/share/check_mk/agents/plugins/mk_docker.py /usr/lib/check_mk_agent/plugins/
+sudo chmod 755 /usr/lib/check_mk_agent/plugins/mk_docker.py
+
