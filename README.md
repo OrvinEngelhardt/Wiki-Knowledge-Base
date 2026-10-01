@@ -65,12 +65,14 @@ sudo chmod 755 /usr/lib/check_mk_agent/plugins/mk_docker.py
 
 Restic:
 ```bash
-apt-get install restic
+sudo apt install restic sshfs
 mkdir -p backup/restic
 cd backup/restic
-export RESTIC_REPOSITORY=./
-export RESTIC_PASSWORD_FILE=~/.restic-pw
-echo 'ein-langes-sicheres-passwort' > ~/.restic-pw && chmod 600 ~/.restic-pw
+openssl rand -base64 32 > .restic-password
+chmod 600 .restic-password
+echo ".restic-password" >> .gitignore
+export RESTIC_REPOSITORY="$PWD/repo"
+export RESTIC_PASSWORD_FILE="$PWD/.restic-password"
 restic init
 ```
 
@@ -81,16 +83,16 @@ restic init
 ### Backup
 
 - [ ] Inkrementelle oder Differenzielle Backups
-- [ ] Konfiguration des Monitoring wird gebackupt
+- [x] Konfiguration des Monitoring wird gebackupt
 - [ ] Ein Backup wurde erfolgreich zurückgespielt
 - [ ] Backups werden automatisch erstellt
 - [ ] Benachrichtigung, wenn automatische Erstellung von Backups fehlschlägt (optional mittels Monitoring)
 
 ### Monitoring
 
-- [ ] Läuft
-- [ ] Ram-Auslastung wird überwacht
-- [ ] verbleibende freie Festplatenkapazität wird überwacht
+- [x] Läuft
+- [x] Ram-Auslastung wird überwacht
+- [x] verbleibende freie Festplatenkapazität wird überwacht
 - [ ] Erfolgreiche automatische Erstellung von Backups wird überwacht
 - [ ] Im Fehlerfall werden Benachrichtigungen „versendet“
 
@@ -112,8 +114,8 @@ restic init
 
 ### Bonus
 
-- [ ] Virtualisierung, Containerisierung
-- [ ] Dienste
+- [x] Virtualisierung, Containerisierung
+- [x] Dienste
 - [ ] Skalierung
 - [ ] Weitere Maßnahmen zur Steigerung der Verfügbarkeit
   - z.B. RAID, Netzwerkredundanz
