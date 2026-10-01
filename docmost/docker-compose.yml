@@ -45,21 +45,6 @@ services:
     volumes:
       - redis_data:/data
 
-  checkmk:
-    image: "checkmk/check-mk-community:2.5.0-latest"
-    container_name: "monitoring"
-    environment:
-      - CMK_PASSWORD=admin
-      - TZ=Europe/Berlin
-    volumes:
-      - monitoring:/omd/sites
-    tmpfs:
-      - /opt/omd/sites/cmk/tmp:uid=1000,gid=1000
-    ports:
-      - 8080:5000
-      - 8000:8000
-    restart: always
-
 
 volumes:
   docmost:
@@ -67,4 +52,3 @@ volumes:
   redis_data:
   caddy_data:
   caddy_config:
-  monitoring:
