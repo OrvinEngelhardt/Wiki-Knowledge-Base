@@ -48,10 +48,12 @@ Ja Projekt wird durch Docker/Podman virtualisiert.
 
 ## Deployment
 Dockmost:
+```bash
 .yml
 Docker compose up -d
-
+```
 CheckMk:
+```bash
 wget https://download.checkmk.com/checkmk/2.5.0p14/check-mk-community-2.5.0p14_0.trixie_amd64.deb
 sudo apt install ./check-mk-community-2.5.0p14_0.trixie_amd64.deb
 sudo omd create --admin-password 'PASSWORT' monitoring  #User cmkadmin
@@ -59,8 +61,10 @@ sudo omd config monitoring set APACHE_TCP_ADDR 0.0.0.0
 sudo omd start monitoring #http://127.0.0.1:5000/monitoring
 sudo apt install python3-dockersudo cp /omd/sites/monitoring/share/check_mk/agents/plugins/mk_docker.py /usr/lib/check_mk_agent/plugins/
 sudo chmod 755 /usr/lib/check_mk_agent/plugins/mk_docker.py
+```
 
 Restic:
+```bash
 apt-get install restic
 mkdir -p backup/restic
 cd backup/restic
@@ -68,4 +72,4 @@ export RESTIC_REPOSITORY=./
 export RESTIC_PASSWORD_FILE=~/.restic-pw
 echo 'ein-langes-sicheres-passwort' > ~/.restic-pw && chmod 600 ~/.restic-pw
 restic init
-
+```
