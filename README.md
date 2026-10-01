@@ -68,11 +68,9 @@ Restic:
 sudo apt install restic sshfs
 mkdir -p backup/restic
 cd backup/restic
-openssl rand -base64 32 > .restic-password
-chmod 600 .restic-password
-echo ".restic-password" >> .gitignore
-export RESTIC_REPOSITORY="$PWD/repo"
-export RESTIC_PASSWORD_FILE="$PWD/.restic-password"
+
+export RESTIC_REPOSITORY="$PWD"
+export RESTIC_PASSWORD="DeinPasswortHier"
 restic init
 ```
 
