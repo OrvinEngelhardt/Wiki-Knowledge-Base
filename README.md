@@ -41,8 +41,15 @@ Zusätzlich finde ich das Simple Design und andere Theatures wie das Arbeiten in
 ## Sollen einzelne Dienste virtualisiert werden? Falls ja, mit welchen Technologien?
 Ja Projekt wird durch Docker/Podman virtualisiert.
 
-
 ## Welche Anleitungen (bzw. Tutorials) soll genutzt werden? Welche sonstige Dokumentation könnte nützlich sein?
 - https://docmost.com/docs/
 - https://docs.docker.com/
 - https://podman.io/docs
+
+## Deployment
+yml
+CheckMk
+wget https://download.checkmk.com/checkmk/2.5.0p14/check-mk-community-2.5.0p14_0.trixie_amd64.deb
+sudo apt install ./check-mk-community-2.5.0p14_0.trixie_amd64.deb
+sudo omd create monitoring
+sudo omd start monitoring
