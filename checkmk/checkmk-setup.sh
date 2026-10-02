@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 cd "$(dirname "$0")"
 
-# 1. Checkmk installieren
-wget -nc -P /tmp https://download.checkmk.com/checkmk/2.5.0p14/check-mk-community-2.5.0p14_0.trixie_amd64.deb
-sudo apt install -y /tmp/check-mk-community-2.5.0p14_0.trixie_amd64.deb
+# 1. Checkmk installieren (Download immer frisch, Abbruch bei Fehler)
+wget -O /tmp/checkmk.deb https://download.checkmk.com/checkmk/2.5.0p14/check-mk-community-2.5.0p14_0.trixie_amd64.deb || exit 1
+sudo apt install -y /tmp/checkmk.deb || exit 1
 
 # 2. Site anlegen (User: cmkadmin), nur wenn sie noch nicht existiert
 omd sites | grep -qw monitoring || {
