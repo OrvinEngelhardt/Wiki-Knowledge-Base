@@ -46,109 +46,18 @@ Ja Projekt wird durch Docker/Podman virtualisiert.
 - https://docs.docker.com/
 - https://podman.io/docs
 
-## Deployment
-Dockmost:
-```bash
-.yml
-Docker compose up -d
-```
-CheckMk:
-```bash
-wget https://download.checkmk.com/checkmk/2.5.0p14/check-mk-community-2.5.0p14_0.trixie_amd64.deb
-sudo apt install ./check-mk-community-2.5.0p14_0.trixie_amd64.deb
-sudo omd create --admin-password 'PASSWORT' monitoring  #User cmkadmin
-sudo omd config monitoring set APACHE_TCP_ADDR 0.0.0.0
-sudo omd start monitoring #http://127.0.0.1:5000/monitoring
-sudo apt install python3-dockersudo cp /omd/sites/monitoring/share/check_mk/agents/plugins/mk_docker.py /usr/lib/check_mk_agent/plugins/
-sudo chmod 755 /usr/lib/check_mk_agent/plugins/mk_docker.py
-```
+## Deployment Plan
+Vorausetzungen:
 
-Restic:
-```bash
-sudo apt install restic sshfs
-mkdir -p backup/restic
-cd backup/restic
-
-export RESTIC_REPOSITORY="$PWD"
-export RESTIC_PASSWORD="DeinPasswortHier"
-restic init
-
-nano /etc/restic-backup.env
-```
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Muss als root laufen (wegen /etc, /usr/local/sbin, systemctl)
-[ "$EUID" -eq 0 ] || { echo "Bitte mit sudo ausführen." >&2; exit 1; }
-
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO="${REPO:-$SRC/restic}"          # Repository-Ordner (per REPO=... überschreibbar)
-PASSWORT="DeinPasswortHier"
-
-# 1. Pakete
-apt install -y restic jq
-
-# 2. Repository-Ordner
-mkdir -p "$REPO"
-
-# 3. Env-Datei
-cat > /etc/restic-backup.env << EOF
-RESTIC_REPOSITORY=$REPO
-RESTIC_PASSWORD=$PASSWORT
-EOF
-chmod 600 /etc/restic-backup.env
-
-# 4. Repository nur initialisieren, falls noch keins existiert
-set -a; . /etc/restic-backup.env; set +a
-restic cat config >/dev/null 2>&1 || restic init
-
-# 5. Backup-Skript installieren
-install -m 755 "$SRC/backup.sh" /usr/local/sbin/restic-backup
-
-# 6. systemd-Service
-cat > /etc/systemd/system/restic-backup.service << 'EOF'
-[Unit]
-Description=Restic Backup Docmost und Checkmk
-After=docker.service
-
-[Service]
-Type=oneshot
-EnvironmentFile=/etc/restic-backup.env
-ExecStart=/usr/local/sbin/restic-backup
-Nice=10
-IOSchedulingClass=idle
-EOF
-
-# 7. systemd-Timer
-cat > /etc/systemd/system/restic-backup.timer << 'EOF'
-[Unit]
-Description=Restic Backup Mo-Fr um 02:00
-
-[Timer]
-OnCalendar=Mon..Fri 02:00
-Persistent=true
-
-[Install]
-WantedBy=timers.target
-EOF
-
-# 8. Aktivieren
-systemctl daemon-reload
-systemctl enable --now restic-backup.timer
-
-echo "Fertig. Nächster Lauf:"
-systemctl list-timers restic-backup.timer --no-pager
-```
 
 ## Bewertung
 
 ### Backup
 
-- [ ] Inkrementelle oder Differenzielle Backups
+- [x] Inkrementelle oder Differenzielle Backups
 - [x] Konfiguration des Monitoring wird gebackupt
-- [ ] Ein Backup wurde erfolgreich zurückgespielt
-- [ ] Backups werden automatisch erstellt
+- [x] Ein Backup wurde erfolgreich zurückgespielt
+- [x] Backups werden automatisch erstellt
 - [ ] Benachrichtigung, wenn automatische Erstellung von Backups fehlschlägt (optional mittels Monitoring)
 
 ### Monitoring
@@ -156,23 +65,23 @@ systemctl list-timers restic-backup.timer --no-pager
 - [x] Läuft
 - [x] Ram-Auslastung wird überwacht
 - [x] verbleibende freie Festplatenkapazität wird überwacht
-- [ ] Erfolgreiche automatische Erstellung von Backups wird überwacht
+- [x] Erfolgreiche automatische Erstellung von Backups wird überwacht
 - [ ] Im Fehlerfall werden Benachrichtigungen „versendet“
 
 ### Automatisierung
 
-- [ ] Regelmäßige vollständige Updates gewährleisten
-- [ ] Automatische Wiederherstellung möglich
-- [ ] Lösung ermöglicht Review von Veränderungen (Change Management)
-- [ ] Idempotente Anwendung der Konfigurationsverwaltung funktioniert fehlerfrei
+- [x] Regelmäßige vollständige Updates gewährleisten
+- [x] Automatische Wiederherstellung möglich
+- [x] Lösung ermöglicht Review von Veränderungen (Change Management)
+- [x] Idempotente Anwendung der Konfigurationsverwaltung funktioniert fehlerfrei
 - [ ] Mehrere Konfigurationen lassen sich miteinander kombinieren
 - [ ] Ein einzelner Konfigurationsschritt kann einfach und sauber rückgängig gemacht werden
 
 ### Organisatorische Maßnahmen
 
-- [ ] Planung
-- [ ] Dokumentation
-- [ ] Versionskontrolle
+- [x] Planung
+- [x] Dokumentation
+- [x] Versionskontrolle
 - [ ] …
 
 ### Bonus
