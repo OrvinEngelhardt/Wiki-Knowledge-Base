@@ -72,9 +72,74 @@ cd backup/restic
 export RESTIC_REPOSITORY="$PWD"
 export RESTIC_PASSWORD="DeinPasswortHier"
 restic init
+
+nano /etc/restic-backup.env
 ```
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
 
+# Muss als root laufen (wegen /etc, /usr/local/sbin, systemctl)
+[ "$EUID" -eq 0 ] || { echo "Bitte mit sudo ausführen." >&2; exit 1; }
 
+SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="${REPO:-$SRC/restic}"          # Repository-Ordner (per REPO=... überschreibbar)
+PASSWORT="DeinPasswortHier"
+
+# 1. Pakete
+apt install -y restic jq
+
+# 2. Repository-Ordner
+mkdir -p "$REPO"
+
+# 3. Env-Datei
+cat > /etc/restic-backup.env << EOF
+RESTIC_REPOSITORY=$REPO
+RESTIC_PASSWORD=$PASSWORT
+EOF
+chmod 600 /etc/restic-backup.env
+
+# 4. Repository nur initialisieren, falls noch keins existiert
+set -a; . /etc/restic-backup.env; set +a
+restic cat config >/dev/null 2>&1 || restic init
+
+# 5. Backup-Skript installieren
+install -m 755 "$SRC/backup.sh" /usr/local/sbin/restic-backup
+
+# 6. systemd-Service
+cat > /etc/systemd/system/restic-backup.service << 'EOF'
+[Unit]
+Description=Restic Backup Docmost und Checkmk
+After=docker.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/restic-backup.env
+ExecStart=/usr/local/sbin/restic-backup
+Nice=10
+IOSchedulingClass=idle
+EOF
+
+# 7. systemd-Timer
+cat > /etc/systemd/system/restic-backup.timer << 'EOF'
+[Unit]
+Description=Restic Backup Mo-Fr um 02:00
+
+[Timer]
+OnCalendar=Mon..Fri 02:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+# 8. Aktivieren
+systemctl daemon-reload
+systemctl enable --now restic-backup.timer
+
+echo "Fertig. Nächster Lauf:"
+systemctl list-timers restic-backup.timer --no-pager
+```
 
 ## Bewertung
 
