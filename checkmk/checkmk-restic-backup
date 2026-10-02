@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Checkmk Local Check: Status des restic-backup Service
+SVC="restic-backup.service"
+NAME="Restic Backup"
+
+START="$(systemctl show "$SVC" -p ExecMainStartTimestamp --value)"
+ACTIVE="$(systemctl show "$SVC" -p ActiveState --value)"
+RESULT="$(systemctl show "$SVC" -p Result --value)"
+NEXT="$(systemctl show restic-backup.timer -p NextElapseUSecRealtime --value)"
+
+WARN_H=80
+CRIT_H=120
+
+if [ "$ACTIVE" = "activating" ] || [ "$ACTIVE" = "active" ]; then
+  echo "0 \"$NAME\" - Backup läuft gerade (gestartet: $START)"
+  exit 0
+fi
+
+if [ -z "$START" ] || [ "$START" = "n/a" ]; then
+  echo "1 \"$NAME\" - Backup wurde seit dem letzten Systemstart noch nicht ausgeführt (nächster Lauf: $NEXT)"
+  exit 0
+fi
+
+START_EPOCH="$(date -d "$START" +%s)"
+AGE_H=$(( ( $(date +%s) - START_EPOCH ) / 3600 ))
+
+if [ "$ACTIVE" = "failed" ] || [ "$RESULT" != "success" ]; then
+  STATE=2; TXT="FEHLGESCHLAGEN ($RESULT)"
+elif [ "$AGE_H" -ge "$CRIT_H" ]; then
+  STATE=2; TXT="Letztes Backup zu alt"
+elif [ "$AGE_H" -ge "$WARN_H" ]; then
+  STATE=1; TXT="Letztes Backup ist alt"
+else
+  STATE=0; TXT="OK"
+fi
+
+echo "$STATE \"$NAME\" age_hours=${AGE_H};${WARN_H};${CRIT_H} $TXT, zuletzt gestartet: $START (vor ${AGE_H}h), nächster Lauf: $NEXT"

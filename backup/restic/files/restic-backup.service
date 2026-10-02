@@ -1,0 +1,10 @@
+[Unit]
+Description=Restic Backup Docmost und Checkmk
+After=docker.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/restic-backup.env
+ExecStart=/usr/local/sbin/restic-backup
+Nice=10
+IOSchedulingClass=idle
