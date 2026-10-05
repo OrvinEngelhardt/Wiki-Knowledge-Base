@@ -30,13 +30,9 @@ Zusätzlich finde ich das Simple Design und andere Theatures wie das Arbeiten in
 - Monitoring = CheckMK (https://checkmk.com/de) (https://docs.checkmk.com/latest/de/introduction_docker.html)
 - AI provider = Offen
 - Deployment Automatiesierung = Dockerfile
-- Revers Proxi = Caddy oder Treafik
+- Revers Proxi = Caddy (https://caddyserver.com/docs/quick-starts/reverse-proxy)
 
-## Erstellen Sie eine grobe Übersicht, wie die Architektur des Projekes aussehen sollen.
-- Auf welcher Plattform soll das Projekt laufen? Welche Hardware wird benötigt? Welche Betriebsysteme werden genutzt?
-  
-- OS = Irgendein Linux Distroy (Wegen Docker eigendlich egal, aber wahrscheinlich Arch da ich es Privat nutze)
-- Plattform = Docker/Podman (Ich möchte lieber Podman nutze habe damit aber noch keine erfahrung daher vielleicht doch Docker)
+
 
 ## Sollen einzelne Dienste virtualisiert werden? Falls ja, mit welchen Technologien?
 Ja Projekt wird durch Docker/Podman virtualisiert.
@@ -47,7 +43,15 @@ Ja Projekt wird durch Docker/Podman virtualisiert.
 - https://podman.io/docs
 
 ## Deployment Plan
-Vorausetzungen:
+### Vorausetzungen:
+- Ein Debian Basiertes Linux Distro
+
+### Durchführung:
+- Clone das Reposetory
+- Sudo chmod +x setup-all.sh
+- bash setup-all.sh
+- Warten (Falls es hier zu fehler kommt, können die einzellen skrippte auch einzellt nach einander ausgeführt werden: setup-dockmost.sh -> setup-restic.sh -> setup-checkmk.sh)
+- Fertig
 
 
 ## Bewertung
@@ -74,7 +78,7 @@ Vorausetzungen:
 - [x] Automatische Wiederherstellung möglich
 - [x] Lösung ermöglicht Review von Veränderungen (Change Management)
 - [x] Idempotente Anwendung der Konfigurationsverwaltung funktioniert fehlerfrei
-- [ ] Mehrere Konfigurationen lassen sich miteinander kombinieren
+- [x] Mehrere Konfigurationen lassen sich miteinander kombinieren
 - [ ] Ein einzelner Konfigurationsschritt kann einfach und sauber rückgängig gemacht werden
 
 ### Organisatorische Maßnahmen
@@ -82,7 +86,6 @@ Vorausetzungen:
 - [x] Planung
 - [x] Dokumentation
 - [x] Versionskontrolle
-- [ ] …
 
 ### Bonus
 
